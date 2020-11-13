@@ -50,7 +50,7 @@ def locate_cuda():
 
     cudaconfig = {'home':home, 'nvcc':nvcc,
                   'include': pjoin(home, 'include'),
-                  'lib64': pjoin(home, 'lib64')}
+                  'lib64': pjoin(home, 'lib')}
     for k, v in cudaconfig.items():
         if not os.path.exists(v):
             raise EnvironmentError('The CUDA %s path could not be located in %s' % (k, v))
@@ -60,10 +60,11 @@ CUDA = locate_cuda()
 
 
 # Obtain the numpy include directory.  This logic works across numpy versions.
-try:
-    numpy_include = np.get_include()
-except AttributeError:
-    numpy_include = np.get_numpy_include()
+numpy_include = np.get_include()
+#try:
+#    numpy_include = np.get_include()
+#except AttributeError:
+#    numpy_include = np.get_numpy_include()
 
 
 def customize_compiler_for_nvcc(self):
@@ -170,3 +171,6 @@ setup(
     # inject our custom trigger
     cmdclass={'build_ext': custom_build_ext},
 )
+
+for e in ext_modules:
+    e.cython_directives = {'language_level': "3"} #all are Python-3

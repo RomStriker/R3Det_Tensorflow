@@ -12,6 +12,8 @@ import numpy as np
 import time
 sys.path.append("../")
 
+import pyximport
+pyximport.install()
 from libs.configs import cfgs
 from libs.networks import build_whole_network_r3det
 from data.io.read_tfrecord_multi_gpu import next_batch

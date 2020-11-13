@@ -3,7 +3,6 @@ from __future__ import division, print_function, absolute_import
 
 from libs.configs import cfgs
 
-
 class_names = [
         'back_ground', 'person', 'bicycle', 'car', 'motorcycle',
         'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
@@ -52,7 +51,12 @@ def get_coco_label_dict():
     return NAME_LABEL_MAP
 
 
-if cfgs.DATASET_NAME == 'WIDER':
+if cfgs.DATASET_NAME == 'book-spine':
+    NAME_LABEL_MAP = {
+        'back_ground': 0,
+        'book': 1
+    }
+elif cfgs.DATASET_NAME == 'WIDER':
     NAME_LABEL_MAP = {
         'back_ground': 0,
         'face': 1

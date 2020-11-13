@@ -154,3 +154,4 @@ tools/test_icdar2015/*
 tools/test_ohd_sjtu/*
 output/summary/*
 data/tfrecord/*
+/util_scripts.txt
