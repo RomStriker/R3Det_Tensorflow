@@ -154,7 +154,8 @@ def clip_image(file_idx, image, boxes_all, width, height, stride_w, stride_h):
     boxes_all_5 = backward_convert(boxes_all[:, :8], False)
     print(boxes_all[np.logical_or(boxes_all_5[:, 2] <= min_pixel, boxes_all_5[:, 3] <= min_pixel), :])
     boxes_all = boxes_all[np.logical_and(boxes_all_5[:, 2] > min_pixel, boxes_all_5[:, 3] > min_pixel), :]
-
+    width = image.shape[1]
+    height = image.shape[0]
     if boxes_all.shape[0] > 0:
         shape = image.shape
         #for start_h in range(0, shape[0], stride_h):

@@ -125,7 +125,7 @@ def train():
     with tf.Graph().as_default(), tf.device('/cpu:0'):
 
         num_gpu = len(cfgs.GPU_GROUP.strip().split(','))
-        global_step = slim.get_or_create_global_step()
+        global_step = tf.train.get_or_create_global_step()
         lr = warmup_lr(cfgs.LR, global_step, cfgs.WARM_SETP, num_gpu)
         tf.summary.scalar('lr', lr)
 
@@ -297,7 +297,7 @@ def train():
         summary_op = tf.summary.merge_all()
 
         restorer, restore_ckpt = r3det.get_restorer()
-        saver = tf.train.Saver(max_to_keep=5)
+        saver = tf.train.Saver(max_to_keep=50)
 
         init_op = tf.group(
             tf.global_variables_initializer(),
@@ -364,7 +364,15 @@ def train():
                     save_ckpt = os.path.join(save_dir, '{}_'.format(cfgs.DATASET_NAME) +
                                              str((global_stepnp-1)*num_gpu) + 'model.ckpt')
                     saver.save(sess, save_ckpt)
+                    tf.train.write_graph(sess.graph.as_graph_def(), '.', save_ckpt[:-5]+'.pbtxt', as_text=True)
                     print(' weights had been saved')
+
+                    # # Export checkpoint to SavedModel
+                    # builder = tf.compat.v1.saved_model.builder.SavedModelBuilder(save_ckpt)
+                    # builder.add_meta_graph_and_variables(sess,
+                    #                                      [tf.saved_model.TRAINING, tf.saved_model.SERVING],
+                    #                                      strip_default_attrs=True)
+                    # builder.save()
 
             coord.request_stop()
             coord.join(threads)

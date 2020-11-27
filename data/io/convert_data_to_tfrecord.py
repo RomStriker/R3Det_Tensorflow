@@ -10,13 +10,22 @@ import cv2
 from libs.label_name_dict.label_dict import *
 from help_utils.tools import *
 
-tf.app.flags.DEFINE_string('VOC_dir', '/data/yangxue/dataset/DOTA/DOTA1.0/trainval', 'Voc dir')
+#tf.app.flags.DEFINE_string('VOC_dir', '/data/yangxue/dataset/DOTA/DOTA1.0/trainval', 'Voc dir')
+#tf.app.flags.DEFINE_string('xml_dir', 'labeltxt', 'xml dir')
+#tf.app.flags.DEFINE_string('image_dir', 'images', 'image dir')
+#tf.app.flags.DEFINE_string('save_name', 'train', 'save name')
+#tf.app.flags.DEFINE_string('save_dir', '../tfrecord/', 'save name')
+#tf.app.flags.DEFINE_string('img_format', '.png', 'format of image')
+#tf.app.flags.DEFINE_string('dataset', 'DOTA', 'dataset')
+
+tf.app.flags.DEFINE_string('VOC_dir', '/home/sommarjobbare/Downloads/our_book_dataset_val_voc', 'Voc dir')
 tf.app.flags.DEFINE_string('xml_dir', 'labeltxt', 'xml dir')
 tf.app.flags.DEFINE_string('image_dir', 'images', 'image dir')
-tf.app.flags.DEFINE_string('save_name', 'train', 'save name')
+tf.app.flags.DEFINE_string('save_name', 'val', 'save name')
 tf.app.flags.DEFINE_string('save_dir', '../tfrecord/', 'save name')
 tf.app.flags.DEFINE_string('img_format', '.png', 'format of image')
 tf.app.flags.DEFINE_string('dataset', 'DOTA', 'dataset')
+
 FLAGS = tf.app.flags.FLAGS
 
 

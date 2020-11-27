@@ -289,6 +289,7 @@ class DetectionNetwork(object):
             gtboxes_batch_r = tf.cast(gtboxes_batch_r, tf.float32)
 
         img_shape = tf.shape(input_img_batch)
+        #maybe use x.get_shape()
 
         # 1. build base network
         feature_pyramid = self.build_base_network(input_img_batch)
@@ -617,7 +618,8 @@ class DetectionNetwork(object):
         with tf.variable_scope('refine_feature_pyramid{}'.format(stage)):
             refine_feature_pyramid = {}
             refine_boxes_list = []
-
+            list_temp = list(zip(box_pred_list, cls_prob_list, proposal_list,
+                            cfgs.ANCHOR_STRIDE, cfgs.LEVEL))
             for box_pred, cls_prob, proposal, stride, level in \
                     zip(box_pred_list, cls_prob_list, proposal_list,
                         cfgs.ANCHOR_STRIDE, cfgs.LEVEL):

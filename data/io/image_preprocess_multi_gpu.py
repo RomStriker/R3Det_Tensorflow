@@ -154,10 +154,10 @@ def random_rgb2gray(img_tensor, gtboxes_and_label):
 
         label = gtboxes_and_label[:, -1]
 
-        if cfgs.DATASET_NAME.startswith('DOTA'):
-            if NAME_LABEL_MAP['swimming-pool'] in label:
-                # do not change color, because swimming-pool need color
-                return img
+        #if cfgs.DATASET_NAME.startswith('DOTA'):
+        #    if NAME_LABEL_MAP['swimming-pool'] in label:
+        #        # do not change color, because swimming-pool need color
+        #        return img
 
         coin = np.random.rand()
         if coin < 0.3:

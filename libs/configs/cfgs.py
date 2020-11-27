@@ -76,11 +76,11 @@ ADD_BOX_IN_TENSORBOARD = True
 ROOT_PATH = os.path.abspath('../')
 print(20*"++--")
 print(ROOT_PATH)
-GPU_GROUP = "0,1"
-NUM_GPU = len(GPU_GROUP.strip().split(','))
+GPU_GROUP = "0"
+NUM_GPU = 0 #len(GPU_GROUP.strip().split(','))
 SHOW_TRAIN_INFO_INTE = 20
 SMRY_ITER = 500
-SAVE_WEIGHTS_INTE = 27000 * 4
+SAVE_WEIGHTS_INTE = 100 #27000 * 4
 
 SUMMARY_PATH = ROOT_PATH + '/output/summary'
 TEST_SAVE_PATH = ROOT_PATH + '/tools/test_result'
@@ -111,25 +111,26 @@ USE_IOU_FACTOR = True
 ALPHA = 1.0
 BETA = 1.0
 
-BATCH_SIZE = 1
+BATCH_SIZE = 8
 EPSILON = 1e-5
 MOMENTUM = 0.9
-LR = 1e-4
+LR = 1e-3
 DECAY_STEP = [SAVE_WEIGHTS_INTE*12, SAVE_WEIGHTS_INTE*16, SAVE_WEIGHTS_INTE*20]
 MAX_ITERATION = SAVE_WEIGHTS_INTE*20
 WARM_SETP = int(1.0 / 4.0 * SAVE_WEIGHTS_INTE)
 
 # -------------------------------------------- Data_preprocess_config
-DATASET_NAME = 'book-spine'  # 'pascal', 'DOTA', 'coco'
+DATASET_NAME = 'DOTA'  # 'pascal', 'DOTA', 'coco'
 #PIXEL_MEAN = [123.68, 116.779, 103.939]  # R, G, B. In tf, channel is RGB. In openCV, channel is BGR
 #PIXEL_MEAN_ = [0.485, 0.456, 0.406]
 #PIXEL_STD = [0.229, 0.224, 0.225]  # R, G, B. In tf, channel is RGB. In openCV, channel is BGR
 
+# For book-spine dataset
 PIXEL_MEAN = [127.958, 124.471, 124.831]  # R, G, B. In tf, channel is RGB. In openCV, channel is BGR
 PIXEL_MEAN_ = [0.502, 0.488, 0.490]
 PIXEL_STD = [0.255, 0.241, 0.246]  # R, G, B. In tf, channel is RGB. In openCV, channel is BGR
 
-IMG_SHORT_SIDE_LEN = [800, 640, 700, 900, 1000, 1100]
+IMG_SHORT_SIDE_LEN = 640#[800, 640, 700, 900, 1000, 1100]
 IMG_MAX_LENGTH = 1100
 CLASS_NUM = 1
 
@@ -153,7 +154,7 @@ FPN_CHANNEL = 256
 
 # ---------------------------------------------Anchor config
 LEVEL = ['P3', 'P4', 'P5', 'P6', 'P7']
-BASE_ANCHOR_SIZE_LIST = [32, 64, 128, 256, 512]
+BASE_ANCHOR_SIZE_LIST = [32, 64, 128, 256, 512] #[256, 512, 608, 704]
 ANCHOR_STRIDE = [8, 16, 32, 64, 128]
 ANCHOR_SCALES = [2 ** 0, 2 ** (1.0 / 3.0), 2 ** (2.0 / 3.0)]
 ANCHOR_RATIOS = [1, 1 / 2, 2., 1 / 3., 3., 5., 1 / 5.]
@@ -167,16 +168,16 @@ ANGLE_RANGE = 90
 # --------------------------------------------RPN config
 SHARE_NET = True
 USE_P5 = True
-IOU_POSITIVE_THRESHOLD = 0.5
-IOU_NEGATIVE_THRESHOLD = 0.4
-REFINE_IOU_POSITIVE_THRESHOLD = [0.6, 0.7]
+IOU_POSITIVE_THRESHOLD = 0.3  #0.5
+IOU_NEGATIVE_THRESHOLD = 0.3  #0.4
+REFINE_IOU_POSITIVE_THRESHOLD = [0.5, 0.9] #[0.6, 0.7]
 REFINE_IOU_NEGATIVE_THRESHOLD = [0.5, 0.6]
 
 NMS = True
 NMS_IOU_THRESHOLD = 0.1
 MAXIMUM_DETECTIONS = 100
 FILTERED_SCORE = 0.05
-VIS_SCORE = 0.4
+VIS_SCORE = 0.05
 
 # --------------------------------------------MASK config
 USE_SUPERVISED_MASK = False

@@ -51,12 +51,7 @@ def get_coco_label_dict():
     return NAME_LABEL_MAP
 
 
-if cfgs.DATASET_NAME == 'book-spine':
-    NAME_LABEL_MAP = {
-        'back_ground': 0,
-        'book': 1
-    }
-elif cfgs.DATASET_NAME == 'WIDER':
+if cfgs.DATASET_NAME == 'WIDER':
     NAME_LABEL_MAP = {
         'back_ground': 0,
         'face': 1
@@ -103,24 +98,29 @@ elif cfgs.DATASET_NAME.startswith('UCAS-AOD'):
         'car': 1,
         'plane': 2
     }
+#elif cfgs.DATASET_NAME.startswith('DOTA'):
+#    NAME_LABEL_MAP = {
+#        'back_ground': 0,
+#        'roundabout': 1,
+#        'tennis-court': 2,
+#        'swimming-pool': 3,
+#        'storage-tank': 4,
+#        'soccer-ball-field': 5,
+#        'small-vehicle': 6,
+#        'ship': 7,
+#        'plane': 8,
+#        'large-vehicle': 9,
+#        'helicopter': 10,
+#        'harbor': 11,
+#        'ground-track-field': 12,
+#        'bridge': 13,
+#        'basketball-court': 14,
+#        'baseball-diamond': 15
+#    }
 elif cfgs.DATASET_NAME.startswith('DOTA'):
     NAME_LABEL_MAP = {
         'back_ground': 0,
-        'roundabout': 1,
-        'tennis-court': 2,
-        'swimming-pool': 3,
-        'storage-tank': 4,
-        'soccer-ball-field': 5,
-        'small-vehicle': 6,
-        'ship': 7,
-        'plane': 8,
-        'large-vehicle': 9,
-        'helicopter': 10,
-        'harbor': 11,
-        'ground-track-field': 12,
-        'bridge': 13,
-        'basketball-court': 14,
-        'baseball-diamond': 15
+        'book': 1
     }
 elif cfgs.DATASET_NAME == 'coco':
     NAME_LABEL_MAP = get_coco_label_dict()
