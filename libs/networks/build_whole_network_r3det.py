@@ -246,7 +246,7 @@ class DetectionNetwork(object):
                         #                              np.array(cfgs.ANCHOR_SCALES) * stride, cfgs.ANCHOR_RATIOS, 4.0],
                         #                         Tout=[tf.float32])
 
-                        tmp_anchors = generate_anchors.generate_anchors_pre(featuremap_height,
+                        tmp_anchors = generate_anchors.generate_anchors_pre_tf(featuremap_height,
                                                                             featuremap_width,
                                                                             stride,
                                                                             np.array(cfgs.ANCHOR_SCALES) * stride,
