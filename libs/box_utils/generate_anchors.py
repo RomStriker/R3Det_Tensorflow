@@ -9,6 +9,7 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
+import tensorflow as tf
 
 
 # Verify that we compute the same anchors as Shaoqing's matlab implementation:
@@ -65,6 +66,16 @@ def generate_anchors(base_size=16, ratios=[0.5, 1, 2],
                          for i in range(ratio_anchors.shape[0])])
     return anchors.astype(np.float32)
 
+#TODO: Remove this function
+# def generate_anchors_tf(base_size=tf.constant(16), ratios=tf.constant([0.5, 1, 2]),
+#                      scales=tf.pow(2,tf.constant([3,4,5])):
+#     """
+#     Generate anchor (reference) windows by enumerating aspect ratios X
+#     scales wrt a reference (0, 0, 15, 15) window.
+#     """
+#     base_anchor = tf.constant([[1, 1, base_size, base_size]]) - 1
+#     ratio_anchors = _ratio_enum_tf(base_anchor, ratios)
+
 
 def _whctrs(anchor):
     """
@@ -76,7 +87,6 @@ def _whctrs(anchor):
     x_ctr = anchor[0] + 0.5 * (w - 1)
     y_ctr = anchor[1] + 0.5 * (h - 1)
     return w, h, x_ctr, y_ctr
-
 
 def _mkanchors(ws, hs, x_ctr, y_ctr):
     """
@@ -141,9 +151,46 @@ def generate_anchors_pre(height, width, feat_stride, anchor_scales=(8, 16, 32),
 
     return anchors
 
+def generate_anchors_pre_tf(height, width, feat_stride, anchor_scales=(8, 16, 32),
+                         anchor_ratios=(0.5, 1, 2), base_size=16):
+    """ A wrapper function to generate anchors given different scales
+      Also return the number of anchors in variable 'length'
+    """
+    anchors = generate_anchors(
+        base_size=base_size, ratios=np.array(anchor_ratios),
+        scales=np.array(anchor_scales))
+    A = anchors.shape[0]
+
+    #shift_x = np.arange(0, width) * feat_stride
+    shift_x = tf.range(0, width) * feat_stride
+
+    #shift_y = np.arange(0, height) * feat_stride
+    shift_y = tf.range(0, height) * feat_stride
+
+    #shift_x, shift_y = np.meshgrid(shift_x, shift_y)
+    shift_x, shift_y = tf.meshgrid(shift_x, shift_y)
+
+    #shifts = np.vstack((shift_x.ravel(), shift_y.ravel(), shift_x.ravel(),
+    #                    shift_y.ravel())).transpose()
+    shifts = tf.transpose(tf.stack([tf.reshape(shift_x, [-1]), tf.reshape(shift_y, [-1]), tf.reshape(shift_x, [-1]),
+                        tf.reshape(shift_y, [-1])]))
+
+    K = shifts.shape[0]
+
+    # width changes faster, so here it is H, W, C
+    #anchors = anchors.reshape((1, A, 4)) + shifts.reshape((1, K, 4)).transpose(
+    #    (1, 0, 2))
+    anchors = tf.reshape(tf.convert_to_tensor(anchors, np.float32), [1, A, 4]) + \
+              tf.cast(tf.transpose(tf.reshape(shifts, [1, K, 4]), perm=[1, 0, 2]), dtype=tf.float32)
+
+    #anchors = anchors.reshape((K * A, 4)).astype(np.float32, copy=False)
+    anchors = tf.reshape(anchors, [K * A, 4])
+
+    return anchors
+
 
 if __name__ == '__main__':
-    anchors = generate_anchors_pre(64, 64, 8, anchor_scales=np.array([2 ** 0, 2 ** (1.0 / 3.0), 2 ** (2.0 / 3.0)]) * 8,
+    anchors = generate_anchors_pre_tf(64, 64, 8, anchor_scales=np.array([2 ** 0, 2 ** (1.0 / 3.0), 2 ** (2.0 / 3.0)]) * 8,
                                    anchor_ratios=(0.5, 1.0, 2.0), base_size=4)
     print(anchors[:10])
 
@@ -154,3 +201,30 @@ if __name__ == '__main__':
     theta = -90 * np.ones_like(x_c)
     anchors = np.stack([x_c, y_c]).transpose()
     print(anchors.shape)
+
+# Normal
+# [[-22.       -10.        25.        13.      ]
+#  [-28.238106 -13.119053  31.238106  16.119053]
+#  [-36.097626 -17.048813  39.097626  20.048813]
+#  [-14.       -14.        17.        17.      ]
+#  [-18.158737 -18.158737  21.158737  21.158737]
+#  [-23.398417 -23.398417  26.398417  26.398417]
+#  [-10.       -22.        13.        25.      ]
+#  [-13.119053 -28.238106  16.119053  31.238106]
+#  [-17.048813 -36.097626  20.048813  39.097626]
+#  [-14.       -10.        33.        13.      ]]
+# (36864, 2)
+
+
+# tf.Tensor(
+# [[-22.       -10.        25.        13.      ]
+#  [-28.238106 -13.119053  31.238106  16.119053]
+#  [-36.097626 -17.048813  39.097626  20.048813]
+#  [-14.       -14.        17.        17.      ]
+#  [-18.158737 -18.158737  21.158737  21.158737]
+#  [-23.398417 -23.398417  26.398417  26.398417]
+#  [-10.       -22.        13.        25.      ]
+#  [-13.119053 -28.238106  16.119053  31.238106]
+#  [-17.048813 -36.097626  20.048813  39.097626]
+#  [-14.       -10.        33.        13.      ]], shape=(10, 4), dtype=float32)
+# (36864, 2)

@@ -241,12 +241,20 @@ class DetectionNetwork(object):
                     featuremap_width = tf.cast(featuremap_width, tf.float32)
 
                     if self.method == 'H':
-                        tmp_anchors = tf.py_func(generate_anchors.generate_anchors_pre,
-                                                 inp=[featuremap_height, featuremap_width, stride,
-                                                      np.array(cfgs.ANCHOR_SCALES) * stride, cfgs.ANCHOR_RATIOS, 4.0],
-                                                 Tout=[tf.float32])
+                        #tmp_anchors = tf.py_func(generate_anchors.generate_anchors_pre,
+                        #                         inp=[featuremap_height, featuremap_width, stride,
+                        #                              np.array(cfgs.ANCHOR_SCALES) * stride, cfgs.ANCHOR_RATIOS, 4.0],
+                        #                         Tout=[tf.float32])
+
+                        tmp_anchors = generate_anchors.generate_anchors_pre(featuremap_height,
+                                                                            featuremap_width,
+                                                                            stride,
+                                                                            np.array(cfgs.ANCHOR_SCALES) * stride,
+                                                                            cfgs.ANCHOR_RATIOS,
+                                                                            4.0)
 
                         tmp_anchors = tf.reshape(tmp_anchors, [-1, 4])
+
                     else:
                         tmp_anchors = generate_rotate_anchors.make_anchors(base_anchor_size=base_anchor_size,
                                                                            anchor_scales=cfgs.ANCHOR_SCALES,
